@@ -1,0 +1,22 @@
+CREATE TABLE appcc_producto (
+    id_appcc_producto SERIAL PRIMARY KEY,
+    id_appcc INTEGER NOT NULL REFERENCES appcc(id_appcc) ON DELETE CASCADE,
+    estado_producto_congelador1 VARCHAR(50),
+    estado_producto_congelador2 VARCHAR(50),
+    estado_producto_congelador3 VARCHAR(50),
+    estado_producto_camara1 VARCHAR(50),
+    estado_producto_camara2 VARCHAR(50),
+    estado_producto_mesa1 VARCHAR(50),
+    estado_producto_mesa2 VARCHAR(50),
+    estado_producto_mesa3 VARCHAR(50),
+    temperatura_producto_congelador1 NUMERIC(4,1),
+    temperatura_producto_congelador2 NUMERIC(4,1),
+    temperatura_producto_congelador3 NUMERIC(4,1),
+    temperatura_producto_camara1 NUMERIC(4,1),
+    temperatura_producto_camara2 NUMERIC(4,1),
+    temperatura_producto_mesa1 NUMERIC(4,1),
+    temperatura_producto_mesa2 NUMERIC(4,1),
+    temperatura_producto_mesa3 NUMERIC(4,1),
+    observaciones TEXT,
+    CONSTRAINT unique_appcc_producto UNIQUE (id_appcc)
+);

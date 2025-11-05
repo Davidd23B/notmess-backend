@@ -1,0 +1,67 @@
+# Archivos generales
+.DS_Store
+Thumbs.db
+
+# Ignorar carpeta de salida de compilación
+/target/
+
+# Permitir el wrapper de Maven (debe subirse)
+!.mvn/wrapper/maven-wrapper.jar
+!mvnw
+!mvnw.cmd
+
+# No ignorar los SQL y recursos importantes
+!**/src/main/resources/sql/**
+
+# Archivos Log y temporales
+*.log
+logs/
+data/
+*.tmp
+*.bak
+*.swp
+*.swo
+*.orig
+
+# Variables sensibles
+.env
+.env.*
+!.env.example
+
+# Archivos de configuración local
+application.properties
+application.yml
+keys/
+*.pem
+*.pub
+
+# Eclipse / Spring Tool Suite (STS)
+.apt_generated
+.classpath
+.factorypath
+.project
+.settings
+.springBeans
+.sts4-cache
+
+# IntelliJ IDEA
+.idea/
+*.iws
+*.iml
+*.ipr
+
+# NetBeans
+/nbproject/private/
+/nbbuild/
+/dist/
+/nbdist/
+/.nb-gradle/
+build/
+!**/src/main/**/build/
+!**/src/test/**/build/
+
+# Visual Studio Code
+.vscode/
+
+# Otros archivos
+HELP.md
