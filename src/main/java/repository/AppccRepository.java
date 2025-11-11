@@ -1,0 +1,15 @@
+package repository;
+
+import model.Appcc;
+import model.Usuario;
+import java.util.List;
+import java.util.Optional;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
+import java.time.LocalDateTime;
+
+@Repository
+public interface AppccRepository extends JpaRepository<Appcc, Long> {
+    List<Appcc> findByUsuario(Usuario usuario);
+    Optional<Appcc> findByFechaAndTurno (LocalDateTime fecha, String turno);
+}
