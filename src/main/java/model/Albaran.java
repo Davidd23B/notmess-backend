@@ -24,8 +24,8 @@ public class Albaran {
     @Column(nullable = false)
     private Double cantidad;
 
-    @Column(name = "fecha_hora", nullable = false)
-    private LocalDateTime fecha;
+    @Column(nullable = false)
+    private LocalDateTime fecha_hora;
 
     private String observaciones;
     private String motivo_merma;

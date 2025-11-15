@@ -1,7 +1,6 @@
 -- ==========================================================
 --  SISTEMA DE GESTIÓN DE INVENTARIO + APPCC
 --  BASE DE DATOS: PostgreSQL
---  AUTOR: David Burillo Bermejo
 --  VERSIÓN FINAL - Diciembre 2025
 -- ==========================================================
 
