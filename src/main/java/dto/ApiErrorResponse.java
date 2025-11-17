@@ -18,7 +18,7 @@ public class ApiErrorResponse {
     private String error;
     private String path;
     
-    @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss")
+    @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss") //Puede que se pueda cambiar el formato a @JsonFormat(shape = Shape.STRING, pattern = "HH:mm:ss dd/MM/yyyy")
     @Builder.Default
     private LocalDateTime timestamp = LocalDateTime.now();
 }
