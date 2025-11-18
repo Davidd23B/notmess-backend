@@ -36,31 +36,32 @@ public class AppccController {
 
     @PostMapping
     public ResponseEntity<AppccDTO> create(@RequestBody AppccDTO dto) {
-        Appcc a = new Appcc();
-        a.setFecha(dto.getFecha());
-        a.setTurno(dto.getTurno());
-        a.setCompletado(dto.getCompletado());
-        a.setObservaciones(dto.getObservaciones());
+        Appcc.AppccBuilder builder = Appcc.builder()
+                .fecha(dto.getFecha())
+                .turno(dto.getTurno())
+                .completado(dto.getCompletado())
+                .observaciones(dto.getObservaciones());
         if (dto.getId_usuario() != null) {
             Usuario usuario = usuarioRepo.findById(dto.getId_usuario()).orElse(null);
-            a.setUsuario(usuario);
+            builder.usuario(usuario);
         }
-        Appcc saved = service.create(a);
+        Appcc saved = service.create(builder.build());
         return ResponseEntity.ok(toDto(saved));
     }
 
     @PutMapping("/{id}")
     public ResponseEntity<AppccDTO> update(@PathVariable Long id, @RequestBody AppccDTO dto) {
-        Appcc existing = service.findById(id);
-        existing.setFecha(dto.getFecha());
-        existing.setTurno(dto.getTurno());
-        existing.setCompletado(dto.getCompletado());
-        existing.setObservaciones(dto.getObservaciones());
+        Appcc a = Appcc.builder()
+                .fecha(dto.getFecha())
+                .turno(dto.getTurno())
+                .completado(dto.getCompletado())
+                .observaciones(dto.getObservaciones())
+                .build();
         if (dto.getId_usuario() != null) {
             Usuario usuario = usuarioRepo.findById(dto.getId_usuario()).orElse(null);
-            existing.setUsuario(usuario);
+            a.setUsuario(usuario);
         }
-        Appcc saved = service.update(id, existing);
+        Appcc saved = service.update(id, a);
         return ResponseEntity.ok(toDto(saved));
     }
 
@@ -71,13 +72,13 @@ public class AppccController {
     }
 
     private AppccDTO toDto(Appcc a) {
-        AppccDTO d = new AppccDTO();
-        d.setId_appcc(a.getId_appcc());
-        d.setFecha(a.getFecha());
-        d.setTurno(a.getTurno());
-        d.setCompletado(a.getCompletado());
-        d.setObservaciones(a.getObservaciones());
-        d.setId_usuario(a.getUsuario() == null ? null : a.getUsuario().getId_usuario());
-        return d;
+        return AppccDTO.builder()
+                .id_appcc(a.getId_appcc())
+                .fecha(a.getFecha())
+                .turno(a.getTurno())
+                .completado(a.getCompletado())
+                .observaciones(a.getObservaciones())
+                .id_usuario(a.getUsuario() == null ? null : a.getUsuario().getId_usuario())
+                .build();
     }
 }

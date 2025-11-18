@@ -37,10 +37,11 @@ public class UsuarioController {
     @PostMapping
     @PreAuthorize("hasRole('admin')")
     public UsuarioDTO create(@Valid @RequestBody UsuarioDTO dto) {
-        Usuario u = new Usuario();
-        u.setNombre(dto.getNombre());
-        u.setRol(dto.getRol());
-        u.setActivo(dto.isActivo());
+        Usuario u = Usuario.builder()
+                .nombre(dto.getNombre())
+                .rol(dto.getRol())
+                .activo(dto.isActivo())
+                .build();
         Usuario saved = service.create(u);
         return EntityDtoMapper.toDto(saved);
     }
@@ -48,10 +49,11 @@ public class UsuarioController {
     @PutMapping("/{id}")
     @PreAuthorize("hasRole('admin')")
     public UsuarioDTO update(@PathVariable Long id, @Valid @RequestBody UsuarioDTO dto) {
-        Usuario u = new Usuario();
-        u.setNombre(dto.getNombre());
-        u.setRol(dto.getRol());
-        u.setActivo(dto.isActivo());
+        Usuario u = Usuario.builder()
+                .nombre(dto.getNombre())
+                .rol(dto.getRol())
+                .activo(dto.isActivo())
+                .build();
         Usuario updated = service.update(id, u);
         return EntityDtoMapper.toDto(updated);
     }

@@ -36,21 +36,21 @@ public class AppccTemperaturaController {
 
     @PostMapping
     public ResponseEntity<AppccTemperaturaDTO> create(@RequestBody AppccTemperaturaDTO dto) {
-        AppccTemperatura a = new AppccTemperatura();
-        a.setCongelador1(dto.getCongelador1());
-        a.setCongelador2(dto.getCongelador2());
-        a.setCongelador3(dto.getCongelador3());
-        a.setCamara1(dto.getCamara1());
-        a.setCamara2(dto.getCamara2());
-        a.setMesa1(dto.getMesa1());
-        a.setMesa2(dto.getMesa2());
-        a.setMesa3(dto.getMesa3());
-        a.setObservaciones(dto.getObservaciones());
+        AppccTemperatura.AppccTemperaturaBuilder builder = AppccTemperatura.builder()
+                .congelador1(dto.getCongelador1())
+                .congelador2(dto.getCongelador2())
+                .congelador3(dto.getCongelador3())
+                .camara1(dto.getCamara1())
+                .camara2(dto.getCamara2())
+                .mesa1(dto.getMesa1())
+                .mesa2(dto.getMesa2())
+                .mesa3(dto.getMesa3())
+                .observaciones(dto.getObservaciones());
         if (dto.getId_appcc() != null) {
             Appcc appcc = appccRepo.findById(dto.getId_appcc()).orElse(null);
-            a.setAppcc(appcc);
+            builder.appcc(appcc);
         }
-        AppccTemperatura saved = service.create(a);
+        AppccTemperatura saved = service.create(builder.build());
         return ResponseEntity.ok(toDto(saved));
     }
 
@@ -61,18 +61,18 @@ public class AppccTemperaturaController {
     }
 
     private AppccTemperaturaDTO toDto(AppccTemperatura a) {
-        AppccTemperaturaDTO d = new AppccTemperaturaDTO();
-        d.setId_appcc_temperatura(a.getId_appcc_temperatura());
-        d.setCongelador1(a.getCongelador1());
-        d.setCongelador2(a.getCongelador2());
-        d.setCongelador3(a.getCongelador3());
-        d.setCamara1(a.getCamara1());
-        d.setCamara2(a.getCamara2());
-        d.setMesa1(a.getMesa1());
-        d.setMesa2(a.getMesa2());
-        d.setMesa3(a.getMesa3());
-        d.setObservaciones(a.getObservaciones());
-        d.setId_appcc(a.getAppcc() == null ? null : a.getAppcc().getId_appcc());
-        return d;
+        return AppccTemperaturaDTO.builder()
+                .id_appcc_temperatura(a.getId_appcc_temperatura())
+                .congelador1(a.getCongelador1())
+                .congelador2(a.getCongelador2())
+                .congelador3(a.getCongelador3())
+                .camara1(a.getCamara1())
+                .camara2(a.getCamara2())
+                .mesa1(a.getMesa1())
+                .mesa2(a.getMesa2())
+                .mesa3(a.getMesa3())
+                .observaciones(a.getObservaciones())
+                .id_appcc(a.getAppcc() == null ? null : a.getAppcc().getId_appcc())
+                .build();
     }
 }

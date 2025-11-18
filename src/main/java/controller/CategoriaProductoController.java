@@ -30,9 +30,10 @@ public class CategoriaProductoController {
     @PutMapping("/{id}")
     @PreAuthorize("hasRole('admin')")
     public ResponseEntity<CategoriaProducto> update(@PathVariable Long id, @Valid @RequestBody CategoriaProducto c) {
-        CategoriaProducto existing = service.findById(id);
-        existing.setNombre(c.getNombre());
-        return ResponseEntity.ok(service.update(id, existing));
+        CategoriaProducto update = CategoriaProducto.builder()
+                .nombre(c.getNombre())
+                .build();
+        return ResponseEntity.ok(service.update(id, update));
     }
 
     @DeleteMapping("/{id}")

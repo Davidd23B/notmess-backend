@@ -29,7 +29,7 @@ public class AuthServiceImpl implements AuthService {
     public JwtResponse login(LoginRequest loginRequest) {
         
         // Validar credenciales
-        Usuario usuario = usuarioRepo.findByNombreIgnoreCase(loginRequest.getNombre())
+        Usuario usuario = usuarioRepo.findByNombreIgnoreCase(loginRequest.getNombre().trim())
             .orElseThrow(() -> {
                 return new UnauthorizedException("Usuario o contraseña incorrectos");
             });

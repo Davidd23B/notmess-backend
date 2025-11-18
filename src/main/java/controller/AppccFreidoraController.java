@@ -36,17 +36,17 @@ public class AppccFreidoraController {
 
     @PostMapping
     public ResponseEntity<AppccFreidoraDTO> create(@RequestBody AppccFreidoraDTO dto) {
-        AppccFreidora a = new AppccFreidora();
-        a.setTemperatura_freidora1(dto.getTemperatura_freidora1());
-        a.setTemperatura_freidora2(dto.getTemperatura_freidora2());
-        a.setTpm_freidora1(dto.getTpm_freidora1());
-        a.setTpm_freidora2(dto.getTpm_freidora2());
-        a.setObservaciones(dto.getObservaciones());
+        AppccFreidora.AppccFreidoraBuilder builder = AppccFreidora.builder()
+                .temperatura_freidora1(dto.getTemperatura_freidora1())
+                .temperatura_freidora2(dto.getTemperatura_freidora2())
+                .tpm_freidora1(dto.getTpm_freidora1())
+                .tpm_freidora2(dto.getTpm_freidora2())
+                .observaciones(dto.getObservaciones());
         if (dto.getId_appcc() != null) {
             Appcc appcc = appccRepo.findById(dto.getId_appcc()).orElse(null);
-            a.setAppcc(appcc);
+            builder.appcc(appcc);
         }
-        AppccFreidora saved = service.create(a);
+        AppccFreidora saved = service.create(builder.build());
         return ResponseEntity.ok(toDto(saved));
     }
 
@@ -57,14 +57,14 @@ public class AppccFreidoraController {
     }
 
     private AppccFreidoraDTO toDto(AppccFreidora a) {
-        AppccFreidoraDTO d = new AppccFreidoraDTO();
-        d.setId_appcc_freidora(a.getId_appcc_freidora());
-        d.setTemperatura_freidora1(a.getTemperatura_freidora1());
-        d.setTemperatura_freidora2(a.getTemperatura_freidora2());
-        d.setTpm_freidora1(a.getTpm_freidora1());
-        d.setTpm_freidora2(a.getTpm_freidora2());
-        d.setObservaciones(a.getObservaciones());
-        d.setId_appcc(a.getAppcc() == null ? null : a.getAppcc().getId_appcc());
-        return d;
+        return AppccFreidoraDTO.builder()
+                .id_appcc_freidora(a.getId_appcc_freidora())
+                .temperatura_freidora1(a.getTemperatura_freidora1())
+                .temperatura_freidora2(a.getTemperatura_freidora2())
+                .tpm_freidora1(a.getTpm_freidora1())
+                .tpm_freidora2(a.getTpm_freidora2())
+                .observaciones(a.getObservaciones())
+                .id_appcc(a.getAppcc() == null ? null : a.getAppcc().getId_appcc())
+                .build();
     }
 }

@@ -39,17 +39,16 @@ public class AlbaranController {
 
     @PostMapping
     public AlbaranDTO create(@Valid @RequestBody AlbaranDTO dto) {
-        Albaran a = new Albaran();
-        a.setTipo(dto.getTipo());
-        a.setCantidad(dto.getCantidad());
-        a.setFecha_hora(dto.getFecha());
-        a.setObservaciones(dto.getObservaciones());
-        a.setMotivo_merma(dto.getMotivo_merma());
+        Albaran.AlbaranBuilder builder = Albaran.builder()
+                .tipo(dto.getTipo())
+                .cantidad(dto.getCantidad())
+                .fecha_hora(dto.getFecha())
+                .observaciones(dto.getObservaciones())
+                .motivo_merma(dto.getMotivo_merma());
         Producto p = productoRepo.findById(dto.getId_producto()).orElse(null);
         Usuario u = usuarioRepo.findById(dto.getId_usuario()).orElse(null);
-        a.setProducto(p);
-        a.setUsuario(u);
-        Albaran saved = service.create(a, u, p);
+        builder.producto(p).usuario(u);
+        Albaran saved = service.create(builder.build(), u, p);
         return toDto(saved);
     }
 
@@ -61,15 +60,15 @@ public class AlbaranController {
     }
 
     private AlbaranDTO toDto(Albaran a) {
-        AlbaranDTO d = new AlbaranDTO();
-        d.setId_albaran(a.getId_albaran());
-        d.setTipo(a.getTipo());
-        d.setCantidad(a.getCantidad());
-        d.setFecha(a.getFecha_hora());
-        d.setObservaciones(a.getObservaciones());
-        d.setMotivo_merma(a.getMotivo_merma());
-        d.setId_producto(a.getProducto() == null ? null : a.getProducto().getId_producto());
-        d.setId_usuario(a.getUsuario() == null ? null : a.getUsuario().getId_usuario());
-        return d;
+        return AlbaranDTO.builder()
+                .id_albaran(a.getId_albaran())
+                .tipo(a.getTipo())
+                .cantidad(a.getCantidad())
+                .fecha(a.getFecha_hora())
+                .observaciones(a.getObservaciones())
+                .motivo_merma(a.getMotivo_merma())
+                .id_producto(a.getProducto() == null ? null : a.getProducto().getId_producto())
+                .id_usuario(a.getUsuario() == null ? null : a.getUsuario().getId_usuario())
+                .build();
     }
 }
