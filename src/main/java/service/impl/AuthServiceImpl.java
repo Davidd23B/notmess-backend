@@ -28,7 +28,6 @@ public class AuthServiceImpl implements AuthService {
     @Override
     public JwtResponse login(LoginRequest loginRequest) {
         
-        // Validar credenciales
         Usuario usuario = usuarioRepo.findByNombreIgnoreCase(loginRequest.getNombre().trim())
             .orElseThrow(() -> {
                 return new UnauthorizedException("Usuario o contraseña incorrectos");
@@ -39,8 +38,7 @@ public class AuthServiceImpl implements AuthService {
         if (!usuario.isActivo()) {
             throw new UnauthorizedException("Usuario desactivado. Contacta al administrador");
         }
-        // Generar token JWT
-        String token = jwtUtil.generateToken(usuario.getNombre());
+        String token = jwtUtil.generarToken(usuario.getNombre());
         
         return new JwtResponse(token, usuario.getId_usuario(), usuario.getNombre(), usuario.getRol());
     }
@@ -48,11 +46,9 @@ public class AuthServiceImpl implements AuthService {
     @Override
     public JwtResponse register(RegisterRequest registerRequest) {
         
-        // Validar que el usuario no exista
         if (usuarioRepo.findByNombreIgnoreCase(registerRequest.getNombre()).isPresent()) {
             throw new CustomException("Usuario '" + registerRequest.getNombre() + "' ya existe");
         }
-        // Validar campos requeridos
         if (registerRequest.getNombre() == null || registerRequest.getNombre().trim().isEmpty()) {
             throw new CustomException("El nombre de usuario es requerido");
         }
@@ -60,7 +56,6 @@ public class AuthServiceImpl implements AuthService {
             throw new CustomException("La contraseña debe tener al menos 6 caracteres");
         }
 
-        // Crear nuevo usuario
         Usuario nuevoUsuario = Usuario.builder()
             .nombre(registerRequest.getNombre())
             .passwd(passwordEncoder.encode(registerRequest.getPasswd()))
@@ -69,8 +64,7 @@ public class AuthServiceImpl implements AuthService {
             .build();
         usuarioRepo.save(nuevoUsuario);
         
-        // Generar token JWT para el nuevo usuario
-        String token = jwtUtil.generateToken(nuevoUsuario.getNombre());
+        String token = jwtUtil.generarToken(nuevoUsuario.getNombre());
         return new JwtResponse(token, nuevoUsuario.getId_usuario(), nuevoUsuario.getNombre(), nuevoUsuario.getRol());
     }
 }
