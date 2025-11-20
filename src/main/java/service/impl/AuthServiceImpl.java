@@ -38,15 +38,15 @@ public class AuthServiceImpl implements AuthService {
         if (!usuario.isActivo()) {
             throw new UnauthorizedException("Usuario desactivado. Contacta al administrador");
         }
-        String token = jwtUtil.generarToken(usuario.getNombre());
+        String token = jwtUtil.generarToken(usuario.getNombre().trim());
         
-        return new JwtResponse(token, usuario.getId_usuario(), usuario.getNombre(), usuario.getRol());
+        return new JwtResponse(token, usuario.getId_usuario(), usuario.getNombre().trim(), usuario.getRol());
     }
 
     @Override
     public JwtResponse register(RegisterRequest registerRequest) {
         
-        if (usuarioRepo.findByNombreIgnoreCase(registerRequest.getNombre()).isPresent()) {
+        if (usuarioRepo.findByNombreIgnoreCase(registerRequest.getNombre().trim()).isPresent()) {
             throw new CustomException("Usuario '" + registerRequest.getNombre() + "' ya existe");
         }
         if (registerRequest.getNombre() == null || registerRequest.getNombre().trim().isEmpty()) {
@@ -57,14 +57,14 @@ public class AuthServiceImpl implements AuthService {
         }
 
         Usuario nuevoUsuario = Usuario.builder()
-            .nombre(registerRequest.getNombre())
+            .nombre(registerRequest.getNombre().trim())
             .passwd(passwordEncoder.encode(registerRequest.getPasswd()))
             .rol("usuario") // Rol por defecto
             .activo(true)
             .build();
         usuarioRepo.save(nuevoUsuario);
         
-        String token = jwtUtil.generarToken(nuevoUsuario.getNombre());
-        return new JwtResponse(token, nuevoUsuario.getId_usuario(), nuevoUsuario.getNombre(), nuevoUsuario.getRol());
+        String token = jwtUtil.generarToken(nuevoUsuario.getNombre().trim());
+        return new JwtResponse(token, nuevoUsuario.getId_usuario(), nuevoUsuario.getNombre().trim(), nuevoUsuario.getRol());
     }
 }
