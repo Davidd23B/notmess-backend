@@ -1,37 +1,33 @@
 package controller;
 
 import dto.AppccDTO;
+import lombok.RequiredArgsConstructor;
 import model.Appcc;
 import model.Usuario;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import repository.UsuarioRepository;
 import service.AppccService;
-
 import java.util.List;
 import java.util.stream.Collectors;
 
+@RequiredArgsConstructor
 @RestController
 @RequestMapping("/api/appcc")
 public class AppccController {
 
-    private final AppccService service;
+    private final AppccService appccService;
     private final UsuarioRepository usuarioRepo;
-
-    public AppccController(AppccService service, UsuarioRepository usuarioRepo) {
-        this.service = service;
-        this.usuarioRepo = usuarioRepo;
-    }
 
     @GetMapping
     public ResponseEntity<List<AppccDTO>> all() {
-        List<AppccDTO> list = service.findAll().stream().map(this::toDto).collect(Collectors.toList());
+        List<AppccDTO> list = appccService.findAll().stream().map(this::toDto).collect(Collectors.toList());
         return ResponseEntity.ok(list);
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<AppccDTO> get(@PathVariable Long id) {
-        return ResponseEntity.ok(toDto(service.findById(id)));
+        return ResponseEntity.ok(toDto(appccService.findById(id)));
     }
 
     @PostMapping
@@ -45,7 +41,7 @@ public class AppccController {
             Usuario usuario = usuarioRepo.findById(dto.getId_usuario()).orElse(null);
             builder.usuario(usuario);
         }
-        Appcc saved = service.create(builder.build());
+        Appcc saved = appccService.create(builder.build());
         return ResponseEntity.ok(toDto(saved));
     }
 
@@ -61,13 +57,13 @@ public class AppccController {
             Usuario usuario = usuarioRepo.findById(dto.getId_usuario()).orElse(null);
             a.setUsuario(usuario);
         }
-        Appcc saved = service.update(id, a);
+        Appcc saved = appccService.update(id, a);
         return ResponseEntity.ok(toDto(saved));
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<?> delete(@PathVariable Long id) {
-        service.deleteById(id);
+        appccService.deleteById(id);
         return ResponseEntity.noContent().build();
     }
 

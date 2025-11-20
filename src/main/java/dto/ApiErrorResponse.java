@@ -9,10 +9,10 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 public class ApiErrorResponse {
-    private int status;
-    private String message;
+    private int estado;
+    private String mensaje;
     private String error;
-    private String path;
+    private String ruta;
     
     @JsonFormat(pattern = "HH:mm:ss yyyy-MM-dd")
     @Builder.Default

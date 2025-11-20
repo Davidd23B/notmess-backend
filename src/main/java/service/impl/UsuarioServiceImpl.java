@@ -7,11 +7,9 @@ import org.springframework.transaction.annotation.Transactional;
 import repository.UsuarioRepository;
 import service.UsuarioService;
 import exception.ResourceNotFoundException;
-import lombok.extern.slf4j.Slf4j;
 import lombok.RequiredArgsConstructor;
 import java.util.List;
 
-@Slf4j
 @Service
 @Transactional
 @RequiredArgsConstructor

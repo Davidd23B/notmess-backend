@@ -1,37 +1,33 @@
 package controller;
 
 import dto.AppccProductoDTO;
+import lombok.RequiredArgsConstructor;
 import model.AppccProducto;
 import model.Appcc;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import repository.AppccRepository;
 import service.AppccProductoService;
-
 import java.util.List;
 import java.util.stream.Collectors;
 
+@RequiredArgsConstructor
 @RestController
 @RequestMapping("/api/appcc/producto")
 public class AppccProductoController {
 
-    private final AppccProductoService service;
+    private final AppccProductoService appccProductoService;
     private final AppccRepository appccRepo;
-
-    public AppccProductoController(AppccProductoService service, AppccRepository appccRepo) {
-        this.service = service;
-        this.appccRepo = appccRepo;
-    }
 
     @GetMapping
     public ResponseEntity<List<AppccProductoDTO>> all() {
-        List<AppccProductoDTO> list = service.findAll().stream().map(this::toDto).collect(Collectors.toList());
+        List<AppccProductoDTO> list = appccProductoService.findAll().stream().map(this::toDto).collect(Collectors.toList());
         return ResponseEntity.ok(list);
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<AppccProductoDTO> get(@PathVariable Long id) {
-        return ResponseEntity.ok(toDto(service.findById(id)));
+        return ResponseEntity.ok(toDto(appccProductoService.findById(id)));
     }
 
     @PostMapping
@@ -58,13 +54,13 @@ public class AppccProductoController {
             Appcc appcc = appccRepo.findById(dto.getId_appcc()).orElse(null);
             builder.appcc(appcc);
         }
-        AppccProducto saved = service.create(builder.build());
+        AppccProducto saved = appccProductoService.create(builder.build());
         return ResponseEntity.ok(toDto(saved));
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<?> delete(@PathVariable Long id) {
-        service.deleteById(id);
+        appccProductoService.deleteById(id);
         return ResponseEntity.noContent().build();
     }
 

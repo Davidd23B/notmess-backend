@@ -1,37 +1,33 @@
 package controller;
 
 import dto.AppccTemperaturaDTO;
+import lombok.RequiredArgsConstructor;
 import model.AppccTemperatura;
 import model.Appcc;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import repository.AppccRepository;
 import service.AppccTemperaturaService;
-
 import java.util.List;
 import java.util.stream.Collectors;
 
+@RequiredArgsConstructor
 @RestController
 @RequestMapping("/api/appcc/temperatura")
 public class AppccTemperaturaController {
 
-    private final AppccTemperaturaService service;
+    private final AppccTemperaturaService appccTemperaturaService;
     private final AppccRepository appccRepo;
-
-    public AppccTemperaturaController(AppccTemperaturaService service, AppccRepository appccRepo) {
-        this.service = service;
-        this.appccRepo = appccRepo;
-    }
 
     @GetMapping
     public ResponseEntity<List<AppccTemperaturaDTO>> all() {
-        List<AppccTemperaturaDTO> list = service.findAll().stream().map(this::toDto).collect(Collectors.toList());
+        List<AppccTemperaturaDTO> list = appccTemperaturaService.findAll().stream().map(this::toDto).collect(Collectors.toList());
         return ResponseEntity.ok(list);
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<AppccTemperaturaDTO> get(@PathVariable Long id) {
-        return ResponseEntity.ok(toDto(service.findById(id)));
+        return ResponseEntity.ok(toDto(appccTemperaturaService.findById(id)));
     }
 
     @PostMapping
@@ -50,13 +46,13 @@ public class AppccTemperaturaController {
             Appcc appcc = appccRepo.findById(dto.getId_appcc()).orElse(null);
             builder.appcc(appcc);
         }
-        AppccTemperatura saved = service.create(builder.build());
+        AppccTemperatura saved = appccTemperaturaService.create(builder.build());
         return ResponseEntity.ok(toDto(saved));
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<?> delete(@PathVariable Long id) {
-        service.deleteById(id);
+        appccTemperaturaService.deleteById(id);
         return ResponseEntity.noContent().build();
     }
 
