@@ -21,7 +21,7 @@ public class AlbaranDTO {
     @Positive(message = "La cantidad debe ser mayor a 0")
     private Double cantidad;
     
-    private LocalDateTime fecha;
+    private LocalDateTime fechaHora;
     private String observaciones;
     private String motivo_merma;
     

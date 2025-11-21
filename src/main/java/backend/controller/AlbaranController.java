@@ -38,7 +38,7 @@ public class AlbaranController {
         Albaran.AlbaranBuilder builder = Albaran.builder()
                 .tipo(dto.getTipo())
                 .cantidad(dto.getCantidad())
-                .fecha_hora(dto.getFecha())
+                .fechaHora(dto.getFechaHora())
                 .observaciones(dto.getObservaciones())
                 .motivo_merma(dto.getMotivo_merma());
         Producto p = productoRepo.findById(dto.getId_producto()).orElse(null);
@@ -60,7 +60,7 @@ public class AlbaranController {
                 .id_albaran(a.getId_albaran())
                 .tipo(a.getTipo())
                 .cantidad(a.getCantidad())
-                .fecha(a.getFecha_hora())
+                .fechaHora(a.getFechaHora())
                 .observaciones(a.getObservaciones())
                 .motivo_merma(a.getMotivo_merma())
                 .id_producto(a.getProducto() == null ? null : a.getProducto().getId_producto())

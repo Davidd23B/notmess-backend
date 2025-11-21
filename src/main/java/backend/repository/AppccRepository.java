@@ -14,7 +14,7 @@ import java.time.LocalDateTime;
 public interface AppccRepository extends JpaRepository<Appcc, Long> {
     List<Appcc> findByUsuario(Usuario usuario);
     Optional<Appcc> findByFechaAndTurno (LocalDateTime fecha, String turno);
-    List<Appcc> findByFechaHoraBetween(LocalDateTime inicio, LocalDateTime fin);
+    List<Appcc> findByFechaBetween(LocalDateTime inicio, LocalDateTime fin);
     Optional<Appcc> findByFechaAndTurno(LocalDate fecha, String turno);
     boolean existsById(Long id);
 }

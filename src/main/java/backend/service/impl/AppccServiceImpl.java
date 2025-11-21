@@ -65,6 +65,6 @@ public class AppccServiceImpl implements AppccService {
     public List<Appcc> findByFecha(LocalDateTime fecha){
         LocalDateTime inicio = fecha.toLocalDate().atStartOfDay();
         LocalDateTime fin = fecha.toLocalDate().atTime(23, 59, 59);
-        return appccRepo.findByFechaHoraBetween(inicio, fin);
+        return appccRepo.findByFechaBetween(inicio, fin);
     }
 }
