@@ -4,6 +4,7 @@ import backend.model.Producto;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import backend.repository.ProductoRepository;
+import backend.service.ImagenService;
 import backend.service.ProductoService;
 import backend.exception.ResourceNotFoundException;
 import lombok.RequiredArgsConstructor;
@@ -15,6 +16,7 @@ import java.util.List;
 public class ProductoServiceImpl implements ProductoService {
 
     private final ProductoRepository productoRepo;
+    private final ImagenService imagenService;
 
 
     @Override
@@ -49,7 +51,12 @@ public class ProductoServiceImpl implements ProductoService {
         if(producto.getCantidad() != null) p.setCantidad(producto.getCantidad());
         if(producto.getMedida() != null) p.setMedida(producto.getMedida());
         if(producto.getProveedor() != null) p.setProveedor(producto.getProveedor());
-        if(producto.getImagen() != null) p.setImagen(producto.getImagen());
+        if(producto.getImagen() != null) {
+            if(p.getImagen() != null && !p.getImagen().equals(producto.getImagen())){
+                imagenService.deleteImagen(p.getImagen());
+            }
+            p.setImagen(producto.getImagen());
+        }
         if(producto.getCategoria() != null) p.setCategoria(producto.getCategoria());
         return productoRepo.save(p);
     }
@@ -57,6 +64,9 @@ public class ProductoServiceImpl implements ProductoService {
     @Override
     public void deleteById(Long id){
         Producto p = productoRepo.findById(id).orElseThrow(() -> new ResourceNotFoundException("Producto no encontrado: " + id));
+        if(p.getImagen() != null){
+            imagenService.deleteImagen(p.getImagen());
+        }
         productoRepo.delete(p);
     }
 }

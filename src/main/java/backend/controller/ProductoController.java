@@ -7,10 +7,15 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+import backend.service.ImagenService;
 import backend.service.ProductoService;
 import backend.util.EntityDtoMapper;
 import java.util.List;
 import java.util.stream.Collectors;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.http.MediaType;
 
 @RequiredArgsConstructor
 @RestController
@@ -18,6 +23,7 @@ import java.util.stream.Collectors;
 public class ProductoController {
 
     private final ProductoService productoService;
+    private final ImagenService imagenService;
 
     @GetMapping
     public ResponseEntity<List<ProductoDTO>> all() {
@@ -48,6 +54,27 @@ public class ProductoController {
     @PreAuthorize("hasRole('admin')")
     public ResponseEntity<?> delete(@PathVariable Long id) {
         productoService.deleteById(id);
+        return ResponseEntity.noContent().build();
+    }
+
+    @PostMapping(value = "/{id}/imagen", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @PreAuthorize("hasRole('admin')")
+    public ResponseEntity<ProductoDTO> uploadImage(@PathVariable Long id, @RequestParam("file") MultipartFile file) {
+        String filename = imagenService.createImagen(file);
+        Producto update = Producto.builder().imagen(filename).build();
+        Producto saved = productoService.update(id, update);
+        return ResponseEntity.ok(EntityDtoMapper.toDto(saved));
+    }
+
+    @DeleteMapping("/{id}/imagen")
+    @PreAuthorize("hasRole('admin')")
+    public ResponseEntity<?> deleteImage(@PathVariable Long id) {
+        Producto p = productoService.findById(id);
+        if (p.getImagen() != null) {
+            imagenService.deleteImagen(p.getImagen());
+            Producto update = Producto.builder().imagen(null).build();
+            productoService.update(id, update);
+        }
         return ResponseEntity.noContent().build();
     }
 }
