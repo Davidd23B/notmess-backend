@@ -12,23 +12,23 @@ import java.util.Date;
 @Component
 public class JwtUtil {
 
-    @Value("${jwt.secret}")
-    private String jwtSecret;
+    @Value("${jwt.clave-token}")
+    private String jwtClaveToken;
 
-    @Value("${jwt.expiration-ms}")
-    private long jwtExpirationMs;
+    @Value("${jwt.tiempo-expiracion}")
+    private long jwtTiempoExpiracion;
 
     private Key key;
     @PostConstruct
     public void init(){
-        this.key = Keys.hmacShaKeyFor(jwtSecret.getBytes(StandardCharsets.UTF_8));
+        this.key = Keys.hmacShaKeyFor(jwtClaveToken.getBytes(StandardCharsets.UTF_8));
     }
 
     public String generarToken(String nombreUsuario) {
         return Jwts.builder()
                 .setSubject(nombreUsuario)
                 .setIssuedAt(new Date())
-                .setExpiration(new Date(System.currentTimeMillis() + jwtExpirationMs))
+                .setExpiration(new Date(System.currentTimeMillis() + jwtTiempoExpiracion))
                 .signWith(key, SignatureAlgorithm.HS256)
                 .compact();
     }
