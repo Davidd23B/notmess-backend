@@ -20,7 +20,7 @@ public class DatosIniciales implements CommandLineRunner{
         if(usuarioRepo.findByNombreIgnoreCase("admin").isEmpty()){
             Usuario admin = Usuario.builder()
                 .nombre("admin")
-                .passwd(passwordEncoder.encode("admin"))
+                .passwd(passwordEncoder.encode("admin1234"))
                 .rol("admin")
                 .activo(true)
                 .build();
