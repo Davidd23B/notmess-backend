@@ -7,9 +7,15 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+
+import backend.service.CsvService;
 import backend.service.ImagenService;
 import backend.service.ProductoService;
 import backend.util.EntityDtoMapper;
+
+import java.nio.charset.StandardCharsets;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -24,6 +30,7 @@ public class ProductoController {
 
     private final ProductoService productoService;
     private final ImagenService imagenService;
+    private final CsvService csvService;
 
     @GetMapping
     public ResponseEntity<List<ProductoDTO>> all() {
@@ -76,5 +83,19 @@ public class ProductoController {
             productoService.update(id, update);
         }
         return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping("/exportarCsv")
+    @PreAuthorize("hasRole('admin')")
+    public ResponseEntity<byte[]> exportarCsv() {
+        List<Producto> productos = productoService.findAll();
+        String contenidoCsv = csvService.createProductosCsv(productos);
+        byte[] bytesCsv = contenidoCsv.getBytes(StandardCharsets.UTF_8);
+        String fecha = LocalDateTime.now().format(DateTimeFormatter.ofPattern("HHmmss_ddMMyyyy")).toString();
+        String nombreCsv = "productos_" + fecha + ".csv";
+        return ResponseEntity.ok()
+                .header("Content-Disposition", "attachment; filename=\"" + nombreCsv +"\"")
+                .contentType(MediaType.parseMediaType("text/csv; charset=UTF-8"))
+                .body(bytesCsv);
     }
 }
