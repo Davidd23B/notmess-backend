@@ -7,8 +7,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import backend.service.UsuarioService;
-import backend.util.EntityDtoMapper;
 import backend.dto.UsuarioDTO;
+import backend.dto.mapper.UsuarioMapper;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -22,37 +22,29 @@ public class UsuarioController {
     @GetMapping
     @PreAuthorize("hasRole('admin')")
     public List<UsuarioDTO> all() {
-        return usuarioService.findAll().stream().map(EntityDtoMapper::toDto).collect(Collectors.toList());
+        return usuarioService.findAll().stream().map(UsuarioMapper::toDto).collect(Collectors.toList());
     }
 
     @GetMapping("/{id}")
-    @PreAuthorize("hasRole('admin') or #id == authentication.principal.id")
+    @PreAuthorize("hasRole('admin')")
     public UsuarioDTO get(@PathVariable Long id) {
-        return EntityDtoMapper.toDto(usuarioService.findById(id));
+        return UsuarioMapper.toDto(usuarioService.findById(id));
     }
 
     @PostMapping
     @PreAuthorize("hasRole('admin')")
     public UsuarioDTO create(@Valid @RequestBody UsuarioDTO dto) {
-        Usuario u = Usuario.builder()
-                .nombre(dto.getNombre())
-                .rol(dto.getRol())
-                .activo(dto.isActivo())
-                .build();
+        Usuario u = UsuarioMapper.toEntity(dto);
         Usuario saved = usuarioService.create(u);
-        return EntityDtoMapper.toDto(saved);
+        return UsuarioMapper.toDto(saved);
     }
 
     @PutMapping("/{id}")
     @PreAuthorize("hasRole('admin')")
     public UsuarioDTO update(@PathVariable Long id, @Valid @RequestBody UsuarioDTO dto) {
-        Usuario u = Usuario.builder()
-                .nombre(dto.getNombre())
-                .rol(dto.getRol())
-                .activo(dto.isActivo())
-                .build();
+        Usuario u = UsuarioMapper.toEntity(dto);
         Usuario updated = usuarioService.update(id, u);
-        return EntityDtoMapper.toDto(updated);
+        return UsuarioMapper.toDto(updated);
     }
 
     @DeleteMapping("/{id}")

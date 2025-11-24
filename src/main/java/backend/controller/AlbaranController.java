@@ -1,6 +1,7 @@
 package backend.controller;
 
 import backend.dto.AlbaranDTO;
+import backend.dto.mapper.AlbaranMapper;
 import backend.model.Albaran;
 import backend.model.Producto;
 import backend.model.Usuario;
@@ -13,6 +14,7 @@ import org.springframework.web.bind.annotation.*;
 import backend.repository.ProductoRepository;
 import backend.repository.UsuarioRepository;
 import backend.service.AlbaranService;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -27,25 +29,21 @@ public class AlbaranController {
 
     @GetMapping
     public List<AlbaranDTO> all() {
-        return albaranService.findAll().stream().map(this::toDto).collect(Collectors.toList());
+        return albaranService.findAll().stream().map(AlbaranMapper::toDto).collect(Collectors.toList());
     }
 
     @GetMapping("/{id}")
-    public AlbaranDTO get(@PathVariable Long id) { return toDto(albaranService.findById(id)); }
+    public AlbaranDTO get(@PathVariable Long id) { return AlbaranMapper.toDto(albaranService.findById(id)); }
 
     @PostMapping
     public AlbaranDTO create(@Valid @RequestBody AlbaranDTO dto) {
-        Albaran.AlbaranBuilder builder = Albaran.builder()
-                .tipo(dto.getTipo())
-                .cantidad(dto.getCantidad())
-                .fechaHora(dto.getFechaHora())
-                .observaciones(dto.getObservaciones())
-                .motivo_merma(dto.getMotivo_merma());
+        Albaran entity = AlbaranMapper.toEntity(dto);
         Producto p = productoRepo.findById(dto.getId_producto()).orElse(null);
         Usuario u = usuarioRepo.findById(dto.getId_usuario()).orElse(null);
-        builder.producto(p).usuario(u);
-        Albaran saved = albaranService.create(builder.build(), u, p);
-        return toDto(saved);
+        entity.setProducto(p);
+        entity.setUsuario(u);
+        Albaran saved = albaranService.create(entity, u, p);
+        return AlbaranMapper.toDto(saved);
     }
 
     @DeleteMapping("/{id}")
@@ -55,16 +53,15 @@ public class AlbaranController {
         return ResponseEntity.noContent().build();
     }
 
-    private AlbaranDTO toDto(Albaran a) {
-        return AlbaranDTO.builder()
-                .id_albaran(a.getId_albaran())
-                .tipo(a.getTipo())
-                .cantidad(a.getCantidad())
-                .fechaHora(a.getFechaHora())
-                .observaciones(a.getObservaciones())
-                .motivo_merma(a.getMotivo_merma())
-                .id_producto(a.getProducto() == null ? null : a.getProducto().getId_producto())
-                .id_usuario(a.getUsuario() == null ? null : a.getUsuario().getId_usuario())
-                .build();
+    @GetMapping("/fecha/{fecha}")
+    public List<AlbaranDTO> getByFecha(@PathVariable String fecha) {
+        try {
+            LocalDateTime dateTime = LocalDateTime.parse(fecha + "T00:00:00");
+            return albaranService.findByFecha(dateTime).stream()
+                    .map(AlbaranMapper::toDto)
+                    .collect(Collectors.toList());
+        } catch (Exception e) {
+            throw new IllegalArgumentException("Formato de fecha inválido. Use: yyyy-MM-dd");
+        }
     }
 }

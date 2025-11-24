@@ -1,6 +1,8 @@
 package backend.dto;
 
 import java.time.LocalDateTime;
+
+import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Positive;
@@ -20,7 +22,7 @@ public class AlbaranDTO {
     @NotNull(message = "La cantidad es requerida")
     @Positive(message = "La cantidad debe ser mayor a 0")
     private Double cantidad;
-    
+    @JsonFormat(pattern = "HH:mm:ss dd/MM/yyyy")
     private LocalDateTime fechaHora;
     private String observaciones;
     private String motivo_merma;

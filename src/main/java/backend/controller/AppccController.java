@@ -1,6 +1,7 @@
 package backend.controller;
 
 import backend.dto.AppccDTO;
+import backend.dto.mapper.AppccMapper;
 import lombok.RequiredArgsConstructor;
 import backend.model.Appcc;
 import backend.model.Usuario;
@@ -21,44 +22,35 @@ public class AppccController {
 
     @GetMapping
     public ResponseEntity<List<AppccDTO>> all() {
-        List<AppccDTO> list = appccService.findAll().stream().map(this::toDto).collect(Collectors.toList());
+        List<AppccDTO> list = appccService.findAll().stream().map(AppccMapper::toDto).collect(Collectors.toList());
         return ResponseEntity.ok(list);
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<AppccDTO> get(@PathVariable Long id) {
-        return ResponseEntity.ok(toDto(appccService.findById(id)));
+        return ResponseEntity.ok(AppccMapper.toDto(appccService.findById(id)));
     }
 
     @PostMapping
     public ResponseEntity<AppccDTO> create(@RequestBody AppccDTO dto) {
-        Appcc.AppccBuilder builder = Appcc.builder()
-                .fecha(dto.getFecha())
-                .turno(dto.getTurno())
-                .completado(dto.getCompletado())
-                .observaciones(dto.getObservaciones());
+        Appcc entity = AppccMapper.toEntity(dto);
         if (dto.getId_usuario() != null) {
             Usuario usuario = usuarioRepo.findById(dto.getId_usuario()).orElse(null);
-            builder.usuario(usuario);
+            entity.setUsuario(usuario);
         }
-        Appcc saved = appccService.create(builder.build());
-        return ResponseEntity.ok(toDto(saved));
+        Appcc saved = appccService.create(entity);
+        return ResponseEntity.ok(AppccMapper.toDto(saved));
     }
 
     @PutMapping("/{id}")
     public ResponseEntity<AppccDTO> update(@PathVariable Long id, @RequestBody AppccDTO dto) {
-        Appcc a = Appcc.builder()
-                .fecha(dto.getFecha())
-                .turno(dto.getTurno())
-                .completado(dto.getCompletado())
-                .observaciones(dto.getObservaciones())
-                .build();
+        Appcc a = AppccMapper.toEntity(dto);
         if (dto.getId_usuario() != null) {
             Usuario usuario = usuarioRepo.findById(dto.getId_usuario()).orElse(null);
             a.setUsuario(usuario);
         }
         Appcc saved = appccService.update(id, a);
-        return ResponseEntity.ok(toDto(saved));
+        return ResponseEntity.ok(AppccMapper.toDto(saved));
     }
 
     @DeleteMapping("/{id}")
@@ -67,14 +59,16 @@ public class AppccController {
         return ResponseEntity.noContent().build();
     }
 
-    private AppccDTO toDto(Appcc a) {
-        return AppccDTO.builder()
-                .id_appcc(a.getId_appcc())
-                .fecha(a.getFecha())
-                .turno(a.getTurno())
-                .completado(a.getCompletado())
-                .observaciones(a.getObservaciones())
-                .id_usuario(a.getUsuario() == null ? null : a.getUsuario().getId_usuario())
-                .build();
+    @GetMapping("/fecha/{fecha}")
+    public ResponseEntity<List<AppccDTO>> getByFecha(@PathVariable String fecha) {
+        try {
+            java.time.LocalDateTime dateTime = java.time.LocalDateTime.parse(fecha + "T00:00:00");
+            List<AppccDTO> list = appccService.findByFecha(dateTime).stream()
+                    .map(AppccMapper::toDto)
+                    .collect(Collectors.toList());
+            return ResponseEntity.ok(list);
+        } catch (Exception e) {
+            throw new IllegalArgumentException("Formato de fecha inválido. Use: yyyy-MM-dd");
+        }
     }
 }

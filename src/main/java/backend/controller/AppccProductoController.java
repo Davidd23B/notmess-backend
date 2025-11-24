@@ -1,6 +1,7 @@
 package backend.controller;
 
 import backend.dto.AppccProductoDTO;
+import backend.dto.mapper.AppccProductoMapper;
 import lombok.RequiredArgsConstructor;
 import backend.model.AppccProducto;
 import backend.model.Appcc;
@@ -21,70 +22,40 @@ public class AppccProductoController {
 
     @GetMapping
     public ResponseEntity<List<AppccProductoDTO>> all() {
-        List<AppccProductoDTO> list = appccProductoService.findAll().stream().map(this::toDto).collect(Collectors.toList());
+        List<AppccProductoDTO> list = appccProductoService.findAll().stream().map(AppccProductoMapper::toDto).collect(Collectors.toList());
         return ResponseEntity.ok(list);
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<AppccProductoDTO> get(@PathVariable Long id) {
-        return ResponseEntity.ok(toDto(appccProductoService.findById(id)));
+        return ResponseEntity.ok(AppccProductoMapper.toDto(appccProductoService.findById(id)));
     }
 
     @PostMapping
     public ResponseEntity<AppccProductoDTO> create(@RequestBody AppccProductoDTO dto) {
-        AppccProducto.AppccProductoBuilder builder = AppccProducto.builder()
-                .estado_producto_congelador1(dto.getEstado_producto_congelador1())
-                .estado_producto_congelador2(dto.getEstado_producto_congelador2())
-                .estado_producto_congelador3(dto.getEstado_producto_congelador3())
-                .estado_producto_camara1(dto.getEstado_producto_camara1())
-                .estado_producto_camara2(dto.getEstado_producto_camara2())
-                .estado_producto_mesa1(dto.getEstado_producto_mesa1())
-                .estado_producto_mesa2(dto.getEstado_producto_mesa2())
-                .estado_producto_mesa3(dto.getEstado_producto_mesa3())
-                .temperatura_producto_congelador1(dto.getTemperatura_producto_congelador1())
-                .temperatura_producto_congelador2(dto.getTemperatura_producto_congelador2())
-                .temperatura_producto_congelador3(dto.getTemperatura_producto_congelador3())
-                .temperatura_producto_camara1(dto.getTemperatura_producto_camara1())
-                .temperatura_producto_camara2(dto.getTemperatura_producto_camara2())
-                .temperatura_producto_mesa1(dto.getTemperatura_producto_mesa1())
-                .temperatura_producto_mesa2(dto.getTemperatura_producto_mesa2())
-                .temperatura_producto_mesa3(dto.getTemperatura_producto_mesa3())
-                .observaciones(dto.getObservaciones());
+        AppccProducto entity = AppccProductoMapper.toEntity(dto);
         if (dto.getId_appcc() != null) {
             Appcc appcc = appccRepo.findById(dto.getId_appcc()).orElse(null);
-            builder.appcc(appcc);
+            entity.setAppcc(appcc);
         }
-        AppccProducto saved = appccProductoService.create(builder.build());
-        return ResponseEntity.ok(toDto(saved));
+        AppccProducto saved = appccProductoService.create(entity);
+        return ResponseEntity.ok(AppccProductoMapper.toDto(saved));
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<AppccProductoDTO> update(@PathVariable Long id, @RequestBody AppccProductoDTO dto) {
+        AppccProducto entity = AppccProductoMapper.toEntity(dto);
+        if (dto.getId_appcc() != null) {
+            Appcc appcc = appccRepo.findById(dto.getId_appcc()).orElse(null);
+            entity.setAppcc(appcc);
+        }
+        AppccProducto updated = appccProductoService.update(id, entity);
+        return ResponseEntity.ok(AppccProductoMapper.toDto(updated));
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<?> delete(@PathVariable Long id) {
         appccProductoService.deleteById(id);
         return ResponseEntity.noContent().build();
-    }
-
-    private AppccProductoDTO toDto(AppccProducto a) {
-        return AppccProductoDTO.builder()
-                .id_appcc_producto(a.getId_appcc_producto())
-                .estado_producto_congelador1(a.getEstado_producto_congelador1())
-                .estado_producto_congelador2(a.getEstado_producto_congelador2())
-                .estado_producto_congelador3(a.getEstado_producto_congelador3())
-                .estado_producto_camara1(a.getEstado_producto_camara1())
-                .estado_producto_camara2(a.getEstado_producto_camara2())
-                .estado_producto_mesa1(a.getEstado_producto_mesa1())
-                .estado_producto_mesa2(a.getEstado_producto_mesa2())
-                .estado_producto_mesa3(a.getEstado_producto_mesa3())
-                .temperatura_producto_congelador1(a.getTemperatura_producto_congelador1())
-                .temperatura_producto_congelador2(a.getTemperatura_producto_congelador2())
-                .temperatura_producto_congelador3(a.getTemperatura_producto_congelador3())
-                .temperatura_producto_camara1(a.getTemperatura_producto_camara1())
-                .temperatura_producto_camara2(a.getTemperatura_producto_camara2())
-                .temperatura_producto_mesa1(a.getTemperatura_producto_mesa1())
-                .temperatura_producto_mesa2(a.getTemperatura_producto_mesa2())
-                .temperatura_producto_mesa3(a.getTemperatura_producto_mesa3())
-                .observaciones(a.getObservaciones())
-                .id_appcc(a.getAppcc() == null ? null : a.getAppcc().getId_appcc())
-                .build();
     }
 }

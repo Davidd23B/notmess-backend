@@ -35,6 +35,8 @@ public class UsuarioServiceImpl implements UsuarioService {
         }
         usuario.setNombre(usuario.getNombre().trim());
         usuario.setPasswd(passwordEncoder.encode(usuario.getPasswd()));
+        usuario.setRol(usuario.getRol());
+        usuario.setActivo(true);
         return usuarioRepo.save(usuario);
     }
 
@@ -51,6 +53,8 @@ public class UsuarioServiceImpl implements UsuarioService {
             u.setPasswd(passwordEncoder.encode(usuario.getPasswd()));
         }
         if(usuario.getRol() != null) u.setRol(usuario.getRol());
+        if(usuario.isActivo() || !usuario.isActivo()) u.setActivo(usuario.isActivo());
+        else u.setActivo(true);
         return usuarioRepo.save(u);
     }
 

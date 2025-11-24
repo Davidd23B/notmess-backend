@@ -47,6 +47,7 @@ public class AppccTemperaturaServiceImpl implements AppccTemperaturaService {
         if(appccTemperatura.getMesa1() != null) a.setMesa1(appccTemperatura.getMesa1());
         if(appccTemperatura.getMesa2() != null) a.setMesa2(appccTemperatura.getMesa2());
         if(appccTemperatura.getMesa3() != null) a.setMesa3(appccTemperatura.getMesa3());
+        if(appccTemperatura.getObservaciones() != null) a.setObservaciones(appccTemperatura.getObservaciones());
         return appccTemperaturaRepo.save(a);
     }
 

@@ -1,6 +1,7 @@
 package backend.controller;
 
 import backend.dto.AppccFreidoraDTO;
+import backend.dto.mapper.AppccFreidoraMapper;
 import lombok.RequiredArgsConstructor;
 import backend.model.AppccFreidora;
 import backend.model.Appcc;
@@ -21,46 +22,40 @@ public class AppccFreidoraController {
 
     @GetMapping
     public ResponseEntity<List<AppccFreidoraDTO>> all() {
-        List<AppccFreidoraDTO> list = appccFreidoraService.findAll().stream().map(this::toDto).collect(Collectors.toList());
+        List<AppccFreidoraDTO> list = appccFreidoraService.findAll().stream().map(AppccFreidoraMapper::toDto).collect(Collectors.toList());
         return ResponseEntity.ok(list);
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<AppccFreidoraDTO> get(@PathVariable Long id) {
-        return ResponseEntity.ok(toDto(appccFreidoraService.findById(id)));
+        return ResponseEntity.ok(AppccFreidoraMapper.toDto(appccFreidoraService.findById(id)));
     }
 
     @PostMapping
     public ResponseEntity<AppccFreidoraDTO> create(@RequestBody AppccFreidoraDTO dto) {
-        AppccFreidora.AppccFreidoraBuilder builder = AppccFreidora.builder()
-                .temperatura_freidora1(dto.getTemperatura_freidora1())
-                .temperatura_freidora2(dto.getTemperatura_freidora2())
-                .tpm_freidora1(dto.getTpm_freidora1())
-                .tpm_freidora2(dto.getTpm_freidora2())
-                .observaciones(dto.getObservaciones());
+        AppccFreidora entity = AppccFreidoraMapper.toEntity(dto);
         if (dto.getId_appcc() != null) {
             Appcc appcc = appccRepo.findById(dto.getId_appcc()).orElse(null);
-            builder.appcc(appcc);
+            entity.setAppcc(appcc);
         }
-        AppccFreidora saved = appccFreidoraService.create(builder.build());
-        return ResponseEntity.ok(toDto(saved));
+        AppccFreidora saved = appccFreidoraService.create(entity);
+        return ResponseEntity.ok(AppccFreidoraMapper.toDto(saved));
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<AppccFreidoraDTO> update(@PathVariable Long id, @RequestBody AppccFreidoraDTO dto) {
+        AppccFreidora entity = AppccFreidoraMapper.toEntity(dto);
+        if (dto.getId_appcc() != null) {
+            Appcc appcc = appccRepo.findById(dto.getId_appcc()).orElse(null);
+            entity.setAppcc(appcc);
+        }
+        AppccFreidora updated = appccFreidoraService.update(id, entity);
+        return ResponseEntity.ok(AppccFreidoraMapper.toDto(updated));
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<?> delete(@PathVariable Long id) {
         appccFreidoraService.deleteById(id);
         return ResponseEntity.noContent().build();
-    }
-
-    private AppccFreidoraDTO toDto(AppccFreidora a) {
-        return AppccFreidoraDTO.builder()
-                .id_appcc_freidora(a.getId_appcc_freidora())
-                .temperatura_freidora1(a.getTemperatura_freidora1())
-                .temperatura_freidora2(a.getTemperatura_freidora2())
-                .tpm_freidora1(a.getTpm_freidora1())
-                .tpm_freidora2(a.getTpm_freidora2())
-                .observaciones(a.getObservaciones())
-                .id_appcc(a.getAppcc() == null ? null : a.getAppcc().getId_appcc())
-                .build();
     }
 }

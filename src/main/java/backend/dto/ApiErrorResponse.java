@@ -14,7 +14,7 @@ public class ApiErrorResponse {
     private String error;
     private String ruta;
     
-    @JsonFormat(pattern = "HH:mm:ss yyyy-MM-dd")
+    @JsonFormat(pattern = "HH:mm:ss dd/MM/yyyy")
     @Builder.Default
     private LocalDateTime timestamp = LocalDateTime.now();
 }

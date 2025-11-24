@@ -48,6 +48,7 @@ public class AlbaranServiceImpl implements AlbaranService {
                 throw new IllegalArgumentException("No hay suficiente stock para realizar la salida o merma");
             }
         }
+        albaran.setFechaHora(LocalDateTime.now());
         productoRepo.save(producto);
         albaran.setUsuario(u);
         albaran.setProducto(p);
