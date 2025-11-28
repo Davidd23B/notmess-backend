@@ -1,7 +1,5 @@
 -- ==========================================================
---  SISTEMA DE GESTIÓN DE INVENTARIO + APPCC
 --  BASE DE DATOS: PostgreSQL
---  VERSIÓN FINAL - Diciembre 2025
 -- ==========================================================
 
 -- ==========================================================
@@ -58,8 +56,18 @@ CREATE TABLE albaran (
     fecha_hora TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     observaciones TEXT,
     motivo_merma TEXT DEFAULT NULL,
-    id_producto INTEGER NOT NULL REFERENCES producto(id_producto),
     id_usuario INTEGER NOT NULL REFERENCES usuario(id_usuario)
+);
+
+
+-- ==========================================================
+--  TABLA: linea_albaran
+-- ==========================================================
+CREATE TABLE linea_albaran (
+	id_linea_albaran SERIAL PRIMARY KEY,
+	cantidad NUMERIC(10,2) DEFAULT 0,
+	id_albaran INTEGER NOT NULL REFERENCES albaran(id_albaran),
+	id_producto INTEGER NOT NULL REFERENCES producto(id_producto)
 );
 
 
