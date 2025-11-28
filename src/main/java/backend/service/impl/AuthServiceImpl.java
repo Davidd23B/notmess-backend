@@ -57,12 +57,26 @@ public class AuthServiceImpl implements AuthService {
         Usuario nuevoUsuario = Usuario.builder()
             .nombre(registerRequest.getNombre().trim())
             .passwd(passwordEncoder.encode(registerRequest.getPasswd()))
-            .rol("usuario") // Rol por defecto
+            .rol("usuario")
             .activo(true)
             .build();
         usuarioRepo.save(nuevoUsuario);
         
         String token = jwtUtil.generarToken(nuevoUsuario.getNombre().trim());
         return new JwtResponse(token, nuevoUsuario.getId_usuario(), nuevoUsuario.getNombre().trim(), nuevoUsuario.getRol());
+    }
+
+    @Override
+    public void logout(String token) {
+        if (jwtUtil.validarToken(token)) {
+            jwtUtil.invalidarToken(token);
+        } else {
+            throw new UnauthorizedException("Token inválido");
+        }
+    }
+
+    @Override
+    public boolean isTokenValid(String token) {
+        return jwtUtil.validarToken(token);
     }
 }

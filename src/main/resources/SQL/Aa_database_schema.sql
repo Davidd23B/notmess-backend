@@ -171,7 +171,7 @@ CREATE TABLE appcc_freidora (
 --  ÍNDICES para optimizar rendimiento
 -- ==========================================================
 CREATE INDEX idx_producto_categoria ON producto(id_categoria);
-CREATE INDEX idx_albaran_producto ON albaran(id_producto);
+CREATE INDEX idx_albaran_producto ON linea_albaran(id_producto);
 CREATE INDEX idx_albaran_usuario ON albaran(id_usuario);
 CREATE INDEX idx_albaran_fecha_hora ON albaran(fecha_hora);
 CREATE INDEX idx_appcc_fecha_turno ON appcc(fecha, turno);

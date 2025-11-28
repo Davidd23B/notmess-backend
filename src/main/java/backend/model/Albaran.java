@@ -3,8 +3,10 @@ package backend.model;
 import jakarta.persistence.*;
 import lombok.*;
 import java.time.LocalDateTime;
+import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 @Data
 @Builder
@@ -21,9 +23,6 @@ public class Albaran {
     @Column(nullable = false, length = 20)
     private String tipo; // entrada, salida o merma
 
-    @Column(nullable = false)
-    private Double cantidad;
-
     @Column(name = "fecha_hora", nullable = false)
     private LocalDateTime fechaHora;
 
@@ -31,12 +30,11 @@ public class Albaran {
     private String motivo_merma;
 
     @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "id_producto", nullable = false)
-    @JsonBackReference
-    private Producto producto;
-
-    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "id_usuario", nullable = false)
     @JsonBackReference
     private Usuario usuario;
+
+    @OneToMany(mappedBy = "albaran", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonManagedReference
+    private List<LineaAlbaran> lineas;
 }

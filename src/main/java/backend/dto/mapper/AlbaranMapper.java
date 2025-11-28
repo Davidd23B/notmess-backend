@@ -10,11 +10,9 @@ public class AlbaranMapper {
         return AlbaranDTO.builder()
                 .id_albaran(a.getId_albaran())
                 .tipo(a.getTipo())
-                .cantidad(a.getCantidad())
                 .fechaHora(a.getFechaHora())
                 .observaciones(a.getObservaciones())
                 .motivo_merma(a.getMotivo_merma())
-                .id_producto(a.getProducto() == null ? null : a.getProducto().getId_producto())
                 .id_usuario(a.getUsuario() == null ? null : a.getUsuario().getId_usuario())
                 .build();
     }
@@ -23,7 +21,6 @@ public class AlbaranMapper {
         if (dto == null) return null;
         return Albaran.builder()
                 .tipo(dto.getTipo())
-                .cantidad(dto.getCantidad())
                 .fechaHora(dto.getFechaHora())
                 .observaciones(dto.getObservaciones())
                 .motivo_merma(dto.getMotivo_merma())
