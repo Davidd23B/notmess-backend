@@ -31,6 +31,14 @@ public class AppccLimpiezaController {
         return ResponseEntity.ok(AppccLimpiezaMapper.toDto(appccLimpiezaService.findById(id)));
     }
 
+    @GetMapping("/appcc/{idAppcc}")
+    public ResponseEntity<AppccLimpiezaDTO> getByAppccId(@PathVariable Long idAppcc) {
+        return appccLimpiezaService.findByAppccId(idAppcc)
+                .map(AppccLimpiezaMapper::toDto)
+                .map(ResponseEntity::ok)
+                .orElse(ResponseEntity.notFound().build());
+    }
+
     @PostMapping
     public ResponseEntity<AppccLimpiezaDTO> create(@RequestBody AppccLimpiezaDTO dto) {
         AppccLimpieza entity = AppccLimpiezaMapper.toEntity(dto);

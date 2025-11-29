@@ -31,6 +31,14 @@ public class AppccProductoController {
         return ResponseEntity.ok(AppccProductoMapper.toDto(appccProductoService.findById(id)));
     }
 
+    @GetMapping("/appcc/{idAppcc}")
+    public ResponseEntity<AppccProductoDTO> getByAppccId(@PathVariable Long idAppcc) {
+        return appccProductoService.findByAppccId(idAppcc)
+                .map(AppccProductoMapper::toDto)
+                .map(ResponseEntity::ok)
+                .orElse(ResponseEntity.notFound().build());
+    }
+
     @PostMapping
     public ResponseEntity<AppccProductoDTO> create(@RequestBody AppccProductoDTO dto) {
         AppccProducto entity = AppccProductoMapper.toEntity(dto);

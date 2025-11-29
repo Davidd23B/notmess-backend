@@ -33,6 +33,14 @@ public class AppccTemperaturaController {
         return ResponseEntity.ok(AppccTemperaturaMapper.toDto(appccTemperaturaService.findById(id)));
     }
 
+    @GetMapping("/appcc/{idAppcc}")
+    public ResponseEntity<AppccTemperaturaDTO> getByAppccId(@PathVariable Long idAppcc) {
+        return appccTemperaturaService.findByAppccId(idAppcc)
+                .map(AppccTemperaturaMapper::toDto)
+                .map(ResponseEntity::ok)
+                .orElse(ResponseEntity.notFound().build());
+    }
+
     @PostMapping
     public ResponseEntity<AppccTemperaturaDTO> create(@RequestBody AppccTemperaturaDTO dto) {
         AppccTemperatura entity = AppccTemperaturaMapper.toEntity(dto);

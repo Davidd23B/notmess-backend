@@ -31,6 +31,14 @@ public class AppccFreidoraController {
         return ResponseEntity.ok(AppccFreidoraMapper.toDto(appccFreidoraService.findById(id)));
     }
 
+    @GetMapping("/appcc/{idAppcc}")
+    public ResponseEntity<AppccFreidoraDTO> getByAppccId(@PathVariable Long idAppcc) {
+        return appccFreidoraService.findByAppccId(idAppcc)
+                .map(AppccFreidoraMapper::toDto)
+                .map(ResponseEntity::ok)
+                .orElse(ResponseEntity.notFound().build());
+    }
+
     @PostMapping
     public ResponseEntity<AppccFreidoraDTO> create(@RequestBody AppccFreidoraDTO dto) {
         AppccFreidora entity = AppccFreidoraMapper.toEntity(dto);
