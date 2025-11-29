@@ -9,6 +9,7 @@ import org.springframework.http.HttpMethod;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.cors.CorsConfigurationSource;
 import lombok.RequiredArgsConstructor;
 import backend.security.JwtAuthFilter;
 import backend.security.JwtAuthenticationEntryPoint;
@@ -19,15 +20,19 @@ public class SecurityConfig {
 
     private final JwtAuthFilter jwtAuthFilter;
     private final JwtAuthenticationEntryPoint authEntryPoint;
+    private final CorsConfigurationSource corsConfigurationSource;
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
 
         http
+            .cors(cors -> cors.configurationSource(corsConfigurationSource))
             .csrf(csrf -> csrf.disable())
             .exceptionHandling(e -> e.authenticationEntryPoint(authEntryPoint))
                 .authorizeHttpRequests(auth -> auth
                     .requestMatchers("/auth/login").permitAll()
+                    .requestMatchers(HttpMethod.GET, "/api/productos/{id}/imagen").permitAll()
+                    .requestMatchers("/imagenes/**").permitAll()
                     .requestMatchers(HttpMethod.POST, "/auth/register").hasAuthority("admin")
                     .anyRequest().authenticated()
                 )
