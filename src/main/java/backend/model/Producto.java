@@ -26,8 +26,10 @@ public class Producto {
     @Column(nullable = false, length = 10)
     private String medida; // Unidad, KG o L.
 
+    @Column(nullable = false)
     private String proveedor;
 
+    @Column(nullable = true)
     private String imagen;
 
     @ManyToOne(fetch = FetchType.EAGER)

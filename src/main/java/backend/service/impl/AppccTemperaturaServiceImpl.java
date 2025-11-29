@@ -9,6 +9,7 @@ import backend.service.AppccTemperaturaService;
 import backend.exception.ResourceNotFoundException;
 import lombok.RequiredArgsConstructor;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @Transactional
@@ -26,6 +27,11 @@ public class AppccTemperaturaServiceImpl implements AppccTemperaturaService {
     @Override
     public AppccTemperatura findById(Long id) {
         return appccTemperaturaRepo.findById(id).orElseThrow(() -> new ResourceNotFoundException("AppccTemperatura no encontrada: " + id));
+    }
+
+    @Override
+    public Optional<AppccTemperatura> findByAppccId(Long idAppcc) {
+        return appccTemperaturaRepo.findByAppcc_IdAppcc(idAppcc);
     }
 
     @Override

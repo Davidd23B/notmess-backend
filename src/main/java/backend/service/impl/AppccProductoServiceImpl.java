@@ -11,6 +11,7 @@ import backend.service.AppccProductoService;
 import backend.exception.ResourceNotFoundException;
 import lombok.RequiredArgsConstructor;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @Transactional
@@ -28,6 +29,11 @@ public class AppccProductoServiceImpl implements AppccProductoService {
     @Override
     public AppccProducto findById(Long id){
         return appccProductoRepo.findById(id).orElseThrow(() -> new ResourceNotFoundException("AppccProducto no encontrado: " + id));
+    }
+
+    @Override
+    public Optional<AppccProducto> findByAppccId(Long idAppcc) {
+        return appccProductoRepo.findByAppcc_IdAppcc(idAppcc);
     }
 
     @Override

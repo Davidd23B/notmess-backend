@@ -34,9 +34,19 @@ public class AppccServiceImpl implements AppccService {
     @Override
     public Appcc create(Appcc appcc){
         Usuario u = usuarioRepo.findById(appcc.getUsuario().getId_usuario()).orElseThrow(() -> new ResourceNotFoundException("Usuario no encontrado: " + appcc.getUsuario().getId_usuario()));
-        if(!appccRepo.findByFechaAndTurno(appcc.getFecha(), appcc.getTurno()).isEmpty()){
+        
+        // Validar que no exista otro registro para el mismo día y turno
+        LocalDateTime inicio = appcc.getFecha().toLocalDate().atStartOfDay();
+        LocalDateTime fin = appcc.getFecha().toLocalDate().atTime(23, 59, 59);
+        List<Appcc> existentes = appccRepo.findByFechaBetween(inicio, fin);
+        
+        boolean yaExiste = existentes.stream()
+            .anyMatch(a -> a.getTurno().equalsIgnoreCase(appcc.getTurno()));
+        
+        if(yaExiste){
             throw new IllegalArgumentException("Ya existe un registro de APPCC para la fecha y turno indicados");
         }
+        
         appcc.setUsuario(u);
         return appccRepo.save(appcc);
     }

@@ -10,6 +10,7 @@ import backend.service.AppccFreidoraService;
 import backend.exception.ResourceNotFoundException;
 import lombok.RequiredArgsConstructor;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @Transactional
@@ -27,6 +28,11 @@ public class AppccFreidoraServiceImpl implements AppccFreidoraService {
     @Override
     public AppccFreidora findById(Long id) {
         return appccFreidoraRepo.findById(id).orElseThrow(() -> new ResourceNotFoundException("AppccFreidora no encontrada: " + id));
+    }
+
+    @Override
+    public Optional<AppccFreidora> findByAppccId(Long idAppcc) {
+        return appccFreidoraRepo.findByAppcc_IdAppcc(idAppcc);
     }
 
     @Override

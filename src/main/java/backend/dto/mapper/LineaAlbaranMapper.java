@@ -12,6 +12,8 @@ public class LineaAlbaranMapper {
                 .cantidad(linea.getCantidad())
                 .id_albaran(linea.getAlbaran() == null ? null : linea.getAlbaran().getId_albaran())
                 .id_producto(linea.getProducto() == null ? null : linea.getProducto().getId_producto())
+                .nombre_producto(linea.getProducto() == null ? null : linea.getProducto().getNombre())
+                .imagen_producto(linea.getProducto() == null ? null : linea.getProducto().getImagen())
                 .build();
     }
 

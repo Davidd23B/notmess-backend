@@ -11,5 +11,4 @@ import org.springframework.stereotype.Repository;
 public interface LineaAlbaranRepository extends JpaRepository<LineaAlbaran, Long> {
     List<LineaAlbaran> findByAlbaran(Albaran albaran);
     List<LineaAlbaran> findByProducto(Producto producto);
-    List<LineaAlbaran> findByAlbaranId_albaran(Long id_albaran);
 }

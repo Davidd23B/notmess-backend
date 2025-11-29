@@ -11,6 +11,7 @@ public class ProductoMapper {
         return ProductoDTO.builder()
                 .id_producto(p.getId_producto())
                 .id_categoria(p.getCategoria() != null ? p.getCategoria().getId_categoria() : null)
+                .nombre_categoria(p.getCategoria() != null ? p.getCategoria().getNombre() : null)
                 .nombre(p.getNombre())
                 .cantidad(p.getCantidad())
                 .medida(p.getMedida())

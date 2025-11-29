@@ -20,4 +20,8 @@ public class LineaAlbaranDTO {
     
     @NotNull(message = "El id del producto es obligatorio")
     private Long id_producto;
+    
+    private String nombre_producto;
+    
+    private String imagen_producto;
 }

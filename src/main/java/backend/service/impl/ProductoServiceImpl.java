@@ -58,8 +58,9 @@ public class ProductoServiceImpl implements ProductoService {
             if (p.getImagen() != null && !p.getImagen().equals(producto.getImagen())) {
                 imagenService.deleteImagen(p.getImagen());
             }
-            p.setImagen(producto.getImagen());
         }
+        p.setImagen(producto.getImagen());
+        
         if (producto.getCategoria() != null)
             p.setCategoria(producto.getCategoria());
 

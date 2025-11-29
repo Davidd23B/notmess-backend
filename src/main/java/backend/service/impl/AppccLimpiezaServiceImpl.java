@@ -9,6 +9,7 @@ import backend.service.AppccLimpiezaService;
 import backend.exception.ResourceNotFoundException;
 import lombok.RequiredArgsConstructor;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @Transactional
@@ -26,6 +27,11 @@ public class AppccLimpiezaServiceImpl implements AppccLimpiezaService {
     @Override
     public AppccLimpieza findById(Long id) {
         return appccLimpiezaRepo.findById(id).orElseThrow(() -> new ResourceNotFoundException("AppccLimpieza no encontrada: " + id));
+    }
+
+    @Override
+    public Optional<AppccLimpieza> findByAppccId(Long idAppcc) {
+        return appccLimpiezaRepo.findByAppcc_IdAppcc(idAppcc);
     }
 
     @Override
@@ -47,6 +53,8 @@ public class AppccLimpiezaServiceImpl implements AppccLimpiezaService {
         if(appccLimpieza.getMesa1() != null) a.setMesa1(appccLimpieza.getMesa1());
         if(appccLimpieza.getMesa2() != null) a.setMesa2(appccLimpieza.getMesa2());
         if(appccLimpieza.getMesa3() != null) a.setMesa3(appccLimpieza.getMesa3());
+        if(appccLimpieza.getParedes() != null) a.setParedes(appccLimpieza.getParedes());
+        if(appccLimpieza.getSuelo() != null) a.setSuelo(appccLimpieza.getSuelo());
         if(appccLimpieza.getObservaciones() != null) a.setObservaciones(appccLimpieza.getObservaciones());
         return appccLimpiezaRepo.save(a);
     }

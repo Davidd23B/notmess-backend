@@ -34,11 +34,14 @@ public class ImagenServiceImpl implements ImagenService {
 
     @PostConstruct
     public void init() {
+        // Usar la ruta exacta que está en application.properties
         directorioCompleto = Path.of(directorio).toAbsolutePath().normalize();
+        
         extensionesPermitidas = List.of(extensiones.toLowerCase().split(","));
         mimesPermitidos = List.of(mimes.toLowerCase().split(","));
         try{
             Files.createDirectories(directorioCompleto);
+            System.out.println("Directorio de imágenes: " + directorioCompleto);
         }catch(IOException e){
             throw new RuntimeException("No se pudo crear el directorio de imágenes", e);
         }
@@ -56,7 +59,7 @@ public class ImagenServiceImpl implements ImagenService {
             }
             String mime = imagen.getContentType();
             if(mime == null || !mimesPermitidos.contains(mime.toLowerCase())){
-                throw new IllegalArgumentException("Tipo de imagen no permitido");
+                throw new IllegalArgumentException("Tipo de imagen no permitido. Usa JPG, PNG o WEBP");
             }
             String original = imagen.getOriginalFilename();
             if(original == null || !original.contains(".")){
@@ -64,14 +67,16 @@ public class ImagenServiceImpl implements ImagenService {
             }
             String extension = original.substring(original.lastIndexOf('.')).toLowerCase();
             if(!extensionesPermitidas.contains(extension)){
-                throw new IllegalArgumentException("Extensión de imagen no permitida");
+                throw new IllegalArgumentException("Extensión de imagen no permitida. Usa .jpg, .jpeg, .png o .webp");
             }
             String nombreArchivo = UUID.randomUUID().toString() + extension;
             Path pathDirectorio = directorioCompleto.resolve(nombreArchivo).normalize();
             Files.copy(imagen.getInputStream(), pathDirectorio);
             return nombreArchivo;
+        }catch(IllegalArgumentException e){
+            throw e; // Relanzar para que el controller lo maneje
         }catch(IOException e){
-            throw new RuntimeException("Error al guardar la imagen", e);
+            throw new RuntimeException("Error al guardar la imagen en el disco: " + e.getMessage(), e);
         }
     }
     
