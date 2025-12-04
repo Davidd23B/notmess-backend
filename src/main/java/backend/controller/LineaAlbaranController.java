@@ -51,9 +51,13 @@ public class LineaAlbaranController {
 
     @PutMapping("/{id}")
     @PreAuthorize("hasRole('admin')")
-    public ResponseEntity<LineaAlbaranDTO> update(@PathVariable Long id, @Valid @RequestBody LineaAlbaranDTO dto) {
+    public ResponseEntity<?> update(@PathVariable Long id, @Valid @RequestBody LineaAlbaranDTO dto) {
         LineaAlbaran lineaAlbaran = LineaAlbaranMapper.toEntity(dto);
         LineaAlbaran updated = lineaAlbaranService.update(id, lineaAlbaran);
+        if (updated == null) {
+            return ResponseEntity.noContent().build();
+        }
+        
         return ResponseEntity.ok(LineaAlbaranMapper.toDto(updated));
     }
 

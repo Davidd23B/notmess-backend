@@ -31,6 +31,8 @@ data/
 # Archivos de configuración local
 application.properties
 application.yml
+TEMPLATE----application.properties
+TEMPLATE----application.yml
 keys/
 *.pem
 *.pub

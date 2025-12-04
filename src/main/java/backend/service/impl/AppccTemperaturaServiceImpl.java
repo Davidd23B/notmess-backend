@@ -45,15 +45,15 @@ public class AppccTemperaturaServiceImpl implements AppccTemperaturaService {
     @Override
     public AppccTemperatura update(Long id, AppccTemperatura appccTemperatura) {
         AppccTemperatura a = findById(id);
-        if(appccTemperatura.getCongelador1() != null) a.setCongelador1(appccTemperatura.getCongelador1());
-        if(appccTemperatura.getCongelador2() != null) a.setCongelador2(appccTemperatura.getCongelador2());
-        if(appccTemperatura.getCongelador3() != null) a.setCongelador3(appccTemperatura.getCongelador3());
-        if(appccTemperatura.getCamara1() != null) a.setCamara1(appccTemperatura.getCamara1());
-        if(appccTemperatura.getCamara2() != null) a.setCamara2(appccTemperatura.getCamara2());
-        if(appccTemperatura.getMesa1() != null) a.setMesa1(appccTemperatura.getMesa1());
-        if(appccTemperatura.getMesa2() != null) a.setMesa2(appccTemperatura.getMesa2());
-        if(appccTemperatura.getMesa3() != null) a.setMesa3(appccTemperatura.getMesa3());
-        if(appccTemperatura.getObservaciones() != null) a.setObservaciones(appccTemperatura.getObservaciones());
+        a.setCongelador1(appccTemperatura.getCongelador1());
+        a.setCongelador2(appccTemperatura.getCongelador2());
+        a.setCongelador3(appccTemperatura.getCongelador3());
+        a.setCamara1(appccTemperatura.getCamara1());
+        a.setCamara2(appccTemperatura.getCamara2());
+        a.setMesa1(appccTemperatura.getMesa1());
+        a.setMesa2(appccTemperatura.getMesa2());
+        a.setMesa3(appccTemperatura.getMesa3());
+        a.setObservaciones(appccTemperatura.getObservaciones());
         return appccTemperaturaRepo.save(a);
     }
 

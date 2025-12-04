@@ -35,9 +35,13 @@ public class LineaAlbaranServiceImpl implements LineaAlbaranService {
     public LineaAlbaran create(LineaAlbaran lineaAlbaran, Albaran albaran, Producto producto) {
         lineaAlbaran.setAlbaran(albaran);
         lineaAlbaran.setProducto(producto);
-        if (!stockService.verificarStock(lineaAlbaran)) {
-            throw new IllegalArgumentException("No hay suficiente stock para realizar esta operación");
+        List<LineaAlbaran> lineasExistentes = lineaAlbaranRepo.findByAlbaran(albaran);
+        for (LineaAlbaran linea : lineasExistentes) {
+            if (linea.getProducto().getId_producto().equals(producto.getId_producto())) {
+                throw new IllegalArgumentException("El producto ya está agregado a este albarán");
+            }
         }
+        
         LineaAlbaran saved = lineaAlbaranRepo.save(lineaAlbaran);
         stockService.actualizarStock(saved);
         
@@ -50,10 +54,6 @@ public class LineaAlbaranServiceImpl implements LineaAlbaranService {
         stockService.revertirStock(lineaOriginal);
         if (lineaAlbaran.getCantidad() != null) {
             lineaOriginal.setCantidad(lineaAlbaran.getCantidad());
-        }
-        if (!stockService.verificarStock(lineaOriginal)) {
-            stockService.actualizarStock(lineaOriginal);
-            throw new IllegalArgumentException("No hay suficiente stock para realizar esta operación");
         }
         LineaAlbaran updated = lineaAlbaranRepo.save(lineaOriginal);
         stockService.actualizarStock(updated);

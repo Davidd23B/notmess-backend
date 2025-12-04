@@ -18,4 +18,5 @@ public class AppccDTO {
     private Boolean completado;
     private String observaciones;
     private Long id_usuario;
+    private String nombre_usuario;
 }

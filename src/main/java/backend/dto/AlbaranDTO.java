@@ -25,4 +25,5 @@ public class AlbaranDTO {
     
     @NotNull(message = "El id del usuario es requerido")
     private Long id_usuario;
+    private String nombre_usuario;
 }

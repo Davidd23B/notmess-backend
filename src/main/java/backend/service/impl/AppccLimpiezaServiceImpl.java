@@ -45,17 +45,17 @@ public class AppccLimpiezaServiceImpl implements AppccLimpiezaService {
     @Override
     public AppccLimpieza update(Long id, AppccLimpieza appccLimpieza) {
         AppccLimpieza a = findById(id);
-        if(appccLimpieza.getCongelador1() != null) a.setCongelador1(appccLimpieza.getCongelador1());
-        if(appccLimpieza.getCongelador2() != null) a.setCongelador2(appccLimpieza.getCongelador2());
-        if(appccLimpieza.getCongelador3() != null) a.setCongelador3(appccLimpieza.getCongelador3());
-        if(appccLimpieza.getCamara1() != null) a.setCamara1(appccLimpieza.getCamara1());
-        if(appccLimpieza.getCamara2() != null) a.setCamara2(appccLimpieza.getCamara2());
-        if(appccLimpieza.getMesa1() != null) a.setMesa1(appccLimpieza.getMesa1());
-        if(appccLimpieza.getMesa2() != null) a.setMesa2(appccLimpieza.getMesa2());
-        if(appccLimpieza.getMesa3() != null) a.setMesa3(appccLimpieza.getMesa3());
-        if(appccLimpieza.getParedes() != null) a.setParedes(appccLimpieza.getParedes());
-        if(appccLimpieza.getSuelo() != null) a.setSuelo(appccLimpieza.getSuelo());
-        if(appccLimpieza.getObservaciones() != null) a.setObservaciones(appccLimpieza.getObservaciones());
+        a.setCongelador1(appccLimpieza.getCongelador1());
+        a.setCongelador2(appccLimpieza.getCongelador2());
+        a.setCongelador3(appccLimpieza.getCongelador3());
+        a.setCamara1(appccLimpieza.getCamara1());
+        a.setCamara2(appccLimpieza.getCamara2());
+        a.setMesa1(appccLimpieza.getMesa1());
+        a.setMesa2(appccLimpieza.getMesa2());
+        a.setMesa3(appccLimpieza.getMesa3());
+        a.setParedes(appccLimpieza.getParedes());
+        a.setSuelo(appccLimpieza.getSuelo());
+        a.setObservaciones(appccLimpieza.getObservaciones());
         return appccLimpiezaRepo.save(a);
     }
 

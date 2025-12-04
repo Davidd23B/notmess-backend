@@ -1,9 +1,11 @@
 package backend.service.impl;
 
 import backend.model.CategoriaProducto;
+import backend.model.Producto;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import backend.repository.CategoriaProductoRepository;
+import backend.repository.ProductoRepository;
 import backend.service.CategoriaProductoService;
 import backend.exception.ResourceNotFoundException;
 import lombok.RequiredArgsConstructor;
@@ -15,6 +17,7 @@ import java.util.List;
 public class CategoriaProductoServiceImpl implements CategoriaProductoService {
 
     private final CategoriaProductoRepository categoriaRepo;
+    private final ProductoRepository productoRepo;
 
     @Override
     public List<CategoriaProducto> findAll(){
@@ -49,7 +52,18 @@ public class CategoriaProductoServiceImpl implements CategoriaProductoService {
 
     @Override
     public void deleteById(Long id){
-        CategoriaProducto c = categoriaRepo.findById(id).orElseThrow(() -> new ResourceNotFoundException("CategoriaProducto no encontrada: " + id));
+        CategoriaProducto c = categoriaRepo.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("CategoriaProducto no encontrada: " + id));
+        
+        List<Producto> productosAsociados = productoRepo.findByCategoria(c);
+        if (!productosAsociados.isEmpty()) {
+            throw new IllegalArgumentException(
+                "No se puede eliminar la categoría porque tiene " + 
+                productosAsociados.size() + " producto(s) asociado(s). " +
+                "Primero debe reasignar o eliminar los productos de esta categoría."
+            );
+        }
+        
         categoriaRepo.delete(c);
     }
 }

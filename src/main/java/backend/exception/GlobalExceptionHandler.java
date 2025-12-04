@@ -44,6 +44,17 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(error);
     }
 
+    @ExceptionHandler(IllegalArgumentException.class)
+    public ResponseEntity<ApiErrorResponse> handleIllegalArgument(IllegalArgumentException ex, WebRequest request) {
+        ApiErrorResponse error = ApiErrorResponse.builder()
+            .estado(HttpStatus.BAD_REQUEST.value())
+            .mensaje(ex.getMessage())
+            .error("Operación no válida")
+            .ruta(request.getDescription(false).replace("uri=", ""))
+            .build();
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(error);
+    }
+
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<ApiErrorResponse> handleValidationErrors(MethodArgumentNotValidException ex, WebRequest request) {
         String mensaje = ex.getBindingResult().getAllErrors().stream()

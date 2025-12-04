@@ -12,4 +12,5 @@ public interface AlbaranService {
     Albaran update(Long id, Albaran albaran);
     void deleteById(Long id);
     List<Albaran> findByFecha(LocalDateTime fecha);
+    void validarAlbaran(Long albaranId);
 }

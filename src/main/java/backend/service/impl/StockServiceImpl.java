@@ -24,8 +24,9 @@ public class StockServiceImpl implements StockService {
         if ("entrada".equalsIgnoreCase(tipoAlbaran)) {
             producto.setCantidad(producto.getCantidad() + cantidad);
         } else if ("salida".equalsIgnoreCase(tipoAlbaran) || "merma".equalsIgnoreCase(tipoAlbaran)) {
-            if (!verificarStock(lineaAlbaran)) {
-                throw new IllegalArgumentException("No hay suficiente stock para realizar la operación");
+            if (cantidad > producto.getCantidad()) {
+                lineaAlbaran.setCantidad(producto.getCantidad());
+                cantidad = producto.getCantidad();
             }
             producto.setCantidad(producto.getCantidad() - cantidad);
         }

@@ -53,4 +53,11 @@ public class UsuarioController {
         usuarioService.deleteById(id);
         return ResponseEntity.noContent().build();
     }
+
+    @PutMapping("/{id}/activar")
+    @PreAuthorize("hasRole('admin')")
+    public ResponseEntity<?> activate(@PathVariable Long id) {
+        usuarioService.activateById(id);
+        return ResponseEntity.ok().build();
+    }
 }

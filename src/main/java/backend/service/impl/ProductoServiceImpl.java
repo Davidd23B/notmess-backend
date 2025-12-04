@@ -1,14 +1,20 @@
 package backend.service.impl;
 
 import backend.model.Producto;
+import backend.model.LineaAlbaran;
+import backend.model.Albaran;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import backend.repository.ProductoRepository;
+import backend.repository.LineaAlbaranRepository;
+import backend.repository.AlbaranRepository;
 import backend.service.ImagenService;
 import backend.service.ProductoService;
 import backend.exception.ResourceNotFoundException;
 import lombok.RequiredArgsConstructor;
 import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 @Service
 @Transactional
@@ -17,6 +23,8 @@ public class ProductoServiceImpl implements ProductoService {
 
     private final ProductoRepository productoRepo;
     private final ImagenService imagenService;
+    private final LineaAlbaranRepository lineaAlbaranRepo;
+    private final AlbaranRepository albaranRepo;
 
     @Override
     public List<Producto> findAll() {
@@ -71,9 +79,35 @@ public class ProductoServiceImpl implements ProductoService {
     public void deleteById(Long id) {
         Producto p = productoRepo.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Producto no encontrado: " + id));
+        List<LineaAlbaran> lineas = lineaAlbaranRepo.findByProducto(p);
+        Set<Albaran> albaranesAfectados = new HashSet<>();
+        for (LineaAlbaran linea : lineas) {
+            albaranesAfectados.add(linea.getAlbaran());
+        }
+        if (!lineas.isEmpty()) {
+            lineaAlbaranRepo.deleteAll(lineas);
+            lineaAlbaranRepo.flush();
+        }
+        for (Albaran albaran : albaranesAfectados) {
+            List<LineaAlbaran> lineasDelAlbaran = lineaAlbaranRepo.findByAlbaran(albaran);
+            List<LineaAlbaran> lineasCero = lineasDelAlbaran.stream()
+                    .filter(l -> l.getCantidad() == null || l.getCantidad() == 0)
+                    .toList();
+            if (!lineasCero.isEmpty()) {
+                lineaAlbaranRepo.deleteAll(lineasCero);
+                lineaAlbaranRepo.flush();
+            }
+            lineasDelAlbaran = lineaAlbaranRepo.findByAlbaran(albaran);
+            if (lineasDelAlbaran.isEmpty()) {
+                albaranRepo.delete(albaran);
+                albaranRepo.flush();
+            }
+        }
+        
         if (p.getImagen() != null) {
             imagenService.deleteImagen(p.getImagen());
         }
         productoRepo.delete(p);
+        productoRepo.flush();
     }
 }

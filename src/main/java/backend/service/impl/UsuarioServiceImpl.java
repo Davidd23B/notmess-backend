@@ -61,6 +61,14 @@ public class UsuarioServiceImpl implements UsuarioService {
     @Override
     public void deleteById(Long id){
         Usuario u = usuarioRepo.findById(id).orElseThrow(() -> new ResourceNotFoundException("Usuario no encontrado: " + id));
-        usuarioRepo.delete(u);
+        u.setActivo(false);
+        usuarioRepo.save(u);
+    }
+
+    @Override
+    public void activateById(Long id){
+        Usuario u = usuarioRepo.findById(id).orElseThrow(() -> new ResourceNotFoundException("Usuario no encontrado: " + id));
+        u.setActivo(true);
+        usuarioRepo.save(u);
     }
 }

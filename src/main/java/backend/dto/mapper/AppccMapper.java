@@ -14,6 +14,7 @@ public class AppccMapper {
                 .completado(a.getCompletado())
                 .observaciones(a.getObservaciones())
                 .id_usuario(a.getUsuario() == null ? null : a.getUsuario().getId_usuario())
+                .nombre_usuario(a.getUsuario() == null ? null : a.getUsuario().getNombre())
                 .build();
     }
 

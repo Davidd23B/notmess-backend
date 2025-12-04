@@ -34,7 +34,13 @@ public class AlbaranController {
 
     @GetMapping("/{id}")
     public ResponseEntity<AlbaranDTO> get(@PathVariable Long id) {
-        return ResponseEntity.ok(AlbaranMapper.toDto(albaranService.findById(id)));
+        Albaran albaran = albaranService.findById(id);
+        try {
+            albaranService.validarAlbaran(id);
+        } catch (IllegalArgumentException e) {
+            //No hacer nada, esto es solo por validar el albarán.
+        }
+        return ResponseEntity.ok(AlbaranMapper.toDto(albaran));
     }
 
     @PostMapping
@@ -72,6 +78,17 @@ public class AlbaranController {
             return ResponseEntity.ok(list);
         } catch (Exception e) {
             throw new IllegalArgumentException("Formato de fecha inválido. Use: yyyy-MM-dd");
+        }
+    }
+
+    @PostMapping("/{id}/validar")
+    @PreAuthorize("hasRole('admin')")
+    public ResponseEntity<?> validar(@PathVariable Long id) {
+        try {
+            albaranService.validarAlbaran(id);
+            return ResponseEntity.ok().body(java.util.Map.of("mensaje", "Albarán válido"));
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().body(java.util.Map.of("error", e.getMessage()));
         }
     }
 }

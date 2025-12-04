@@ -9,4 +9,5 @@ public interface UsuarioService {
     Usuario create(Usuario usuario);
     Usuario update(Long id, Usuario usuario);
     void deleteById(Long id);
+    void activateById(Long id);
 }
