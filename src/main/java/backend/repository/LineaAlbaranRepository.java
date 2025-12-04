@@ -16,6 +16,6 @@ public interface LineaAlbaranRepository extends JpaRepository<LineaAlbaran, Long
     List<LineaAlbaran> findByProducto(Producto producto);
     
     @Modifying
-    @Query("DELETE FROM LineaAlbaran l WHERE l.producto.id_producto = :productoId")
+    @Query(value = "DELETE FROM linea_albaran WHERE id_producto = :productoId", nativeQuery = true)
     void deleteByProductoId(@Param("productoId") Long productoId);
 }
