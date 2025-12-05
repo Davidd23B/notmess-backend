@@ -34,7 +34,6 @@ public class ImagenServiceImpl implements ImagenService {
 
     @PostConstruct
     public void init() {
-        // Usar la ruta exacta que está en application.properties
         directorioCompleto = Path.of(directorio).toAbsolutePath().normalize();
         
         extensionesPermitidas = List.of(extensiones.toLowerCase().split(","));
@@ -74,7 +73,7 @@ public class ImagenServiceImpl implements ImagenService {
             Files.copy(imagen.getInputStream(), pathDirectorio);
             return nombreArchivo;
         }catch(IllegalArgumentException e){
-            throw e; // Relanzar para que el controller lo maneje
+            throw e;
         }catch(IOException e){
             throw new RuntimeException("Error al guardar la imagen en el disco: " + e.getMessage(), e);
         }
