@@ -29,7 +29,7 @@ data/
 !.env.example
 
 # Archivos de configuración local
-# application.properties
+application.properties
 application.yml
 keys/
 *.pem
